@@ -115,10 +115,7 @@ writer.add_graph(网络模型实例, 网络的输入)
 
 [CrossEntropyLoss](https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html#torch.nn.CrossEntropyLoss)在**分类问题**中常用，计算公式比较复杂：
 
-$$
-loss(x,class)=-log(\frac{exp(x[class])}{\sum_jexp(x[j])})=-x[class]+log(\sum_jexp(x[j]))
-
-$$
+$loss(x,class)=-log(\frac{exp(x[class])}{\sum_jexp(x[j])})=-x[class]+log(\sum_jexp(x[j]))$
 
 以下面的的分类为例：
 
@@ -126,10 +123,7 @@ $$
 
 其 $x(即output)=[0.1,0.2,0.4,0.3]$，$class(即Target) = 2 (表示Dog)$，所以：
 
-$$
-loss(x,class)=-0.4+log(exp(0.1)+exp(0.2)+exp(0.4)+exp(0.3))
-
-$$
+$ loss(x,class)=-0.4+log(exp(0.1)+exp(0.2)+exp(0.4)+exp(0.3))$
 
 想要 loss 尽量小，那么就需要 $x[class]$ 尽量大（让 target 的概率尽量大），且 $\sum_jexp(x[j])$ 尽量小。
 
