@@ -310,11 +310,9 @@ device = torch.device("cuda:1")
 
 ![img](src/7.png)
 
-
 然后 debug，在 class_to_idx 里可以看到标签：
 
 ![img](src/8.png)
-
 
 如果是在gpu上训练的模型，要在cpu上测试，需要加上map_location：
 
