@@ -1,0 +1,12 @@
+# pycharm
+.idea/
+__pycache__/
+
+# data
+dataset*/
+
+# logs
+logs*/
+
+# weights
+*.pth
