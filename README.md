@@ -96,6 +96,7 @@ ReLU 中的 inplace 参数表示是否原地修改。
 [Sequential](https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html#torch.nn.Sequential) 可以把 conv2d、maxpool2d、relu、linear 这些网络层组合在一起，形成一个网络层组合。
 
 尝试实现以下网络模型 (CIFAR10)：
+
 ![img](src/3.png)
 
 使用 tensorborad 可视化网络：
