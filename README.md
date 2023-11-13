@@ -39,7 +39,7 @@ is_available() -> bool
 '''
 ```
 
-# 二、(P6-P7) PyTorch 加载数据
+# 二、(P6-P7, P15) PyTorch 加载数据
 
 蚂蚁蜜蜂分类数据集：[下载链接](https://download.pytorch.org/tutorial/hymenoptera_data.zip) 。
 
@@ -48,6 +48,16 @@ is_available() -> bool
 类方法必须重写 `__getitem__`，来读取单个 img 及其 label。
 
 `__getitem__` 是魔法方法，当在类的实例后附加索引，会自动调用该方法。
+
+`DataLoader` 是批量加载数据用的 (代码见P15)，它会根据 batchsize 的大小，把数据进行打包，并返回一个迭代器，通过 for 循环遍历此迭代器，可以获得每个 batchsize 的数据，数据通常是**四维的张量**，相当于在图像的三通道前，加了一个 batchsize 通道，例如当 batchsize=64 时：
+
+```python
+test_data = torchvision.datasets.CIFAR10("../dataset2", train=False, transform=torchvision.transforms.ToTensor())
+test_loader = DataLoader(dataset=test_data, batch_size=64, shuffle=True, num_workers=0, drop_last=False)
+
+for data in test_loader:
+    imgs, targets = data  # imgs是64张图片压缩成的[64,_,_,_]的tensor, target是对应的标签
+```
 
 # 三、(P8-P9) Tensorboard 的使用
 
