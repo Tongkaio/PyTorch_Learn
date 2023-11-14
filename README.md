@@ -3,11 +3,13 @@
 # 零、常用快捷键
 
 ctrl + P 查看需要填什么参数。
+
 鼠标点击名称然后 alt+enter 可以快速导入要用的库。
 
 # 一、(P4) dir() 和 help()
 
 `dir()` 函数，能让我们知道工具箱以及工具箱中的分隔区有什么东西。
+
 `help()` 函数，能让我们知道每个工具是如何使用的，工具的使用方法。
 
 示例：
@@ -83,17 +85,39 @@ tensorboard --logdir=logs --port=6007
 
 关于卷积的 padding, stride, dilation 等操作，可以看 [这篇文档](https://github.com/vdumoulin/conv_arithmetic/blob/master/README.md) 。
 
+数据经过卷积层后，**通道数、尺寸**可能会发生改变，下面对此进行解释：
+
 卷积层的 in_channels 代表输入的通道数，out_channels 代表输出的通道数。如下图所示，out_channels 数值上等于卷积层中**卷积核的数量**，卷积层中每个卷积核的层数和 in_channels 相等，从而用 1 个卷积核对输入进行卷积可以得到 1 层 (channel) 的输出，如下图所示：
 
 ![image-20231114155643173](src/image-20231114155643173.png)
 
 ![image-20231114155930123](src/image-20231114155930123.png)
 
+图像经过卷积层后的输出尺寸公式为：$out\_size=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
+
+- n：输入图像的尺寸（边长，输入总是正方形）
+- k：卷积核的尺寸
+- p：padding 扩充的像素长度，=1 往外扩充 1 圈，=2 往外扩充 2 圈，以此类推
+- s：stride，即步长
+
+> 快速判断输出尺寸的小技巧：当 padding = kernel_size / 2 (整除) 时，如果 stride = s，则数据的尺寸就会缩小到原来的 1/s。
+
+当考虑到 dilation 时，输出尺寸的计算公式变为：$out\_size=\frac{n-d\times(k-1)+2p-1}{s}+1$，d 为 dilation 的值，当不等于 1 时，可采用这个公式。或者可以先换算 dilation 后的卷积核尺寸 $K=k+(k-1)\times (d-1)=d\times(k-1)+1$，然后 $out\_size=\frac{n-K+2p}{s}+1$，注意下图中 dilation = 2 （=1表示无dilation）：
+
+![dilation](src/dilation.gif)
+
 ## 4.2 MaxPool2d
 
 [MaxPool2d](https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html#torch.nn.MaxPool2d) 默认的步长 stride 和 kernel_size 相同，其中需要注意 ceil_mode 的设置，当为 True 时，会保留池化核超出图像边界的情况：
 
 ![img](src/1.png)
+
+数据经过池化层后，通道数不会改变，**尺寸**会发生改变，和卷积层的公式一样，输出尺寸公式为：$out\_size=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
+
+- n：输入图像的尺寸（边长，输入总是正方形）
+- k：池化核的尺寸
+- p：padding 扩充的像素长度，=1 往外扩充 1 圈，=2 往外扩充 2 圈，以此类推
+- s：stride，即步长
 
 ## 4.3 ReLU
 
