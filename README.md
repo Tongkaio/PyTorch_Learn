@@ -93,7 +93,7 @@ tensorboard --logdir=logs --port=6007
 
 ![image-20231114155930123](src/image-20231114155930123.png)
 
-图像经过卷积层后的输出尺寸公式为：$out\_size=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
+图像经过卷积层后的输出尺寸公式为：$\text{output_size}=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
 
 - n：输入图像的尺寸（边长，输入总是正方形）
 - k：卷积核的尺寸
@@ -102,7 +102,7 @@ tensorboard --logdir=logs --port=6007
 
 > 快速判断输出尺寸的小技巧：当 padding = kernel_size / 2 (整除) 时，如果 stride = s，则数据的尺寸就会缩小到原来的 1/s。
 
-当考虑到 dilation 时，输出尺寸的计算公式变为：$out\_size=\frac{n-d\times(k-1)+2p-1}{s}+1$，d 为 dilation 的值，当不等于 1 时，可采用这个公式。或者可以先换算 dilation 后的卷积核尺寸 $K=k+(k-1)\times (d-1)=d\times(k-1)+1$，然后 $out\_size=\frac{n-K+2p}{s}+1$，注意下图中 dilation = 2 （=1表示无dilation）：
+当考虑到 dilation 时，输出尺寸的计算公式变为：$\text{output_size}=\frac{n-d\times(k-1)+2p-1}{s}+1$，d 为 dilation 的值，当不等于 1 时，可采用这个公式。或者可以先换算 dilation 后的卷积核尺寸 $K=k+(k-1)\times (d-1)=d\times(k-1)+1$，然后 $\text{output_size}=\frac{n-K+2p}{s}+1$，注意下图中 dilation = 2 （=1表示无dilation）：
 
 ![dilation](src/dilation.gif)
 
@@ -112,7 +112,7 @@ tensorboard --logdir=logs --port=6007
 
 ![img](src/1.png)
 
-数据经过池化层后，通道数不会改变，**尺寸**会发生改变，和卷积层的公式一样，输出尺寸公式为：$out\_size=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
+数据经过池化层后，通道数不会改变，**尺寸**会发生改变，和卷积层的公式一样，输出尺寸公式为：$\text{output_size}=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
 
 - n：输入图像的尺寸（边长，输入总是正方形）
 - k：池化核的尺寸
@@ -271,7 +271,8 @@ vgg16_false.classifier[6] = nn.Linear(4096, 10)
 # 十、(P27-P29) 完整的模型训练套路
 
 以 CIFAR10 数据集为例，网络模型如下：
-![[Pasted image 20231108203912.png]]
+
+![img](src/3.png)
 
 ## 10.1 完整训练套路
 
