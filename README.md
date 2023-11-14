@@ -83,6 +83,12 @@ tensorboard --logdir=logs --port=6007
 
 关于卷积的 padding, stride, dilation 等操作，可以看 [这篇文档](https://github.com/vdumoulin/conv_arithmetic/blob/master/README.md) 。
 
+卷积层的 in_channels 代表输入的通道数，out_channels 代表输出的通道数。如下图所示，out_channels 数值上等于卷积层中**卷积核的数量**，卷积层中每个卷积核的层数和 in_channels 相等，从而用 1 个卷积核对输入进行卷积可以得到 1 层 (channel) 的输出，如下图所示：
+
+![image-20231114155643173](src/image-20231114155643173.png)
+
+![image-20231114155930123](src/image-20231114155930123.png)
+
 ## 4.2 MaxPool2d
 
 [MaxPool2d](https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html#torch.nn.MaxPool2d) 默认的步长 stride 和 kernel_size 相同，其中需要注意 ceil_mode 的设置，当为 True 时，会保留池化核超出图像边界的情况：
