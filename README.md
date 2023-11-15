@@ -85,6 +85,8 @@ tensorboard --logdir=logs --port=6007
 
 关于卷积的 padding, stride, dilation 等操作，可以看 [这篇文档](https://github.com/vdumoulin/conv_arithmetic/blob/master/README.md) 。
 
+### 4.1.1 通道数、尺寸的计算
+
 数据经过卷积层后，**通道数、尺寸**可能会发生改变，下面对此进行解释：
 
 卷积层的 in_channels 代表输入的通道数，out_channels 代表输出的通道数。如下图所示，out_channels 数值上等于卷积层中**卷积核的数量**，卷积层中每个卷积核的层数和 in_channels 相等，从而用 1 个卷积核对输入进行卷积可以得到 1 层 (channel) 的输出，如下图所示：
@@ -100,13 +102,27 @@ tensorboard --logdir=logs --port=6007
 - p：padding 扩充的像素长度，=1 往外扩充 1 圈，=2 往外扩充 2 圈，以此类推
 - s：stride，即步长
 
-> 快速判断输出尺寸的小技巧：当 padding = kernel_size / 2 (整除) 时，如果 stride = s，则数据的尺寸就会缩小到原来的 1/s。
-
 当考虑到 dilation 时，输出尺寸的计算公式变为：$\text{output_size}=\frac{n-d\times(k-1)+2p-1}{s}+1$，d 为 dilation 的值，当不等于 1 时，可采用这个公式。或者可以先换算 dilation 后的卷积核尺寸 $K=k+(k-1)\times (d-1)=d\times(k-1)+1$，然后 $\text{output_size}=\frac{n-K+2p}{s}+1$。
 
 dilation 的官方解释为 Spacing between kernel elements （**卷积核的元素之间的距离**），这个距离是一个元素**往其相邻元素移动时，需要走的步数**，所以dilation=1 时，卷积核之间距离是1，无缝隙，dilation=2，卷积核之间距离是2，间隔一个元素。下图中是 dilation = 2 的情况：
 
 ![dilation](src/dilation.gif)
+
+### 4.1.2 快速判断输出尺寸
+
+先看一下公式：$\text{output_size}=\frac{n-d\times(k-1)+2p-1}{s}+1$。
+
+通常输入的图像都是正方形，且边长为 2 的次方，从公式可以看出，对输出尺寸影响最大的就是分母 s，通常 **s 等于几，输出尺寸就会变为原来的 1/s**，s 常取 1 或 2。
+
+而 kernel_size，padding，dilation 通常互相配合，以保证输出的尺寸仍然是 2 的次方（偶数），从而可以继续卷积并缩小尺寸。
+
+例如以下几种卷积层参数，我列出了图像经过这些卷积层后，输出尺寸的变化：
+
+- kernel_size=7，dilation=1，padding=3，**stride=2**，输出尺寸变为原来的 1/2
+- kernel_size=3，dilation=1，padding=1，**stride=2**，输出尺寸变为原来的 1/2
+- kernel_size=3，dilation=4，padding=4，**stride=1**，输出尺寸不变
+
+**总结**：判断尺寸是否变化主要看 **stride**！其余的参数通常只是用于微调。
 
 ## 4.2 MaxPool2d
 
