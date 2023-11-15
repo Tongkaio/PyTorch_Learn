@@ -102,7 +102,9 @@ tensorboard --logdir=logs --port=6007
 
 > 快速判断输出尺寸的小技巧：当 padding = kernel_size / 2 (整除) 时，如果 stride = s，则数据的尺寸就会缩小到原来的 1/s。
 
-当考虑到 dilation 时，输出尺寸的计算公式变为：$\text{output_size}=\frac{n-d\times(k-1)+2p-1}{s}+1$，d 为 dilation 的值，当不等于 1 时，可采用这个公式。或者可以先换算 dilation 后的卷积核尺寸 $K=k+(k-1)\times (d-1)=d\times(k-1)+1$，然后 $\text{output_size}=\frac{n-K+2p}{s}+1$，注意下图中 dilation = 2 （=1表示无dilation）：
+当考虑到 dilation 时，输出尺寸的计算公式变为：$\text{output_size}=\frac{n-d\times(k-1)+2p-1}{s}+1$，d 为 dilation 的值，当不等于 1 时，可采用这个公式。或者可以先换算 dilation 后的卷积核尺寸 $K=k+(k-1)\times (d-1)=d\times(k-1)+1$，然后 $\text{output_size}=\frac{n-K+2p}{s}+1$。
+
+dilation 的官方解释为 Spacing between kernel elements （**卷积核的元素之间的距离**），这个距离是一个元素**往其相邻元素移动时，需要走的步数**，所以dilation=1 时，卷积核之间距离是1，无缝隙，dilation=2，卷积核之间距离是2，间隔一个元素。下图中是 dilation = 2 的情况：
 
 ![dilation](src/dilation.gif)
 
