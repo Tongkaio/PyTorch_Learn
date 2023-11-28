@@ -84,7 +84,7 @@ for data in test_loader:
 - Sampler 决定着取数据的顺序
 - Collate_fn 决定着打包的方式
 
-![PixPin_2023-11-28_19-12-16](src/PixPin_2023-11-28_19-12-16.gif)
+![PixPin_2023-11-28_19-40-01](src/PixPin_2023-11-28_19-40-01.gif)
 
 > 动图来源：[PyTorch DataLoader工作原理可视化](https://mp.weixin.qq.com/s/Uc2LYM6tIOY8KyxB7aQrOw)
 
