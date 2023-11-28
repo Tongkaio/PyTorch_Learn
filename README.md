@@ -379,3 +379,33 @@ model = torch.load("tudui_49.pth", map_location=torch.device('cpu'))
 ```python
 image = torch.reshape(image, (1, 3, 32, 32))
 ```
+
+# 附录
+
+## 1 自定义Sampler
+
+> 参考文章：[自定义PyTorch中的Sampler - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/165136131)
+
+PyTorch 中使用 DataLoader 加载数据集，其代码形式通常为：
+
+```python
+loader_default_sampler = DataLoader(dataset=my_dataset, batch_size=8)
+```
+
+DataLoader 会使用 my_dataset 的 getitem 方法，根据**索引**读取图像和标签，然后把数据按顺序打包成多个 batch_size 大小的数据包，然后我们就可以使用 for 循环进行批量地读取了：
+
+```python
+for imgs, labels in loader_default_sampler:
+    '''imgs, labels 包含了一个 batch_size 大小的数据'''
+    ...
+```
+
+**Sampler** 是 DataLoader 中的一个参数，其作用指定打包数据时的**索引顺序**。通常，当使用 DataLoader 时如果不指定 Sampler 参数，那么 DataLoader 就会按照 dataset 中的索引顺序，对数据进行打包。
+
+例如，如果 dataset 中有 100 张图像，以及对应的 100 个标签，它们通常是按顺序排列的，可以通过索引 0-99 访问它们，如果 batch_size=8，且使用默认的 Sampler 的话，那么 DataLoader 就会把索引 0-7，8-15，14-21 … 各自打包成多个数据包。
+
+明白了这个原理后，我们其实可以自定义 Sampler，来改变打包的顺序。
+
+自定义 Sampler 的时通常需要继承 `Sampler` 类，然后重写 `__iter__` 方法，来重排索引顺序。
+
+代码可以参考本工程的 `./附录/1 自定义Sampler/mySampler.py`。
