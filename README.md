@@ -77,6 +77,17 @@ for data in test_loader:
 
 代码参考本工程的 `P15 DataLoader的使用/mySampler.py`。
 
+## 2.4 总结
+
+这个动图很好地展示了 DataLoader 及其内部参数的关系：
+
+- Sampler 决定着取数据的顺序
+- Collate_fn 决定着打包的方式
+
+![PixPin_2023-11-28_19-12-16](src/PixPin_2023-11-28_19-12-16.gif)
+
+> 动图来源：[PyTorch DataLoader工作原理可视化](https://mp.weixin.qq.com/s/Uc2LYM6tIOY8KyxB7aQrOw)
+
 # 三、(P8-P9) Tensorboard 的使用
 
 在命令行输入以下内容来打开 tensorboard (logs 是日志文件夹)：
