@@ -1,4 +1,4 @@
-> 视频教程：[【小土堆】Pytorch](https://www.bilibili.com/video/BV1hE411t7RN)
+> 参考视频教程：[【小土堆】Pytorch](https://www.bilibili.com/video/BV1hE411t7RN)
 
 # 零、常用快捷键
 
