@@ -122,22 +122,22 @@ tensorboard --logdir=logs --port=6007
 
 ![image-20231114155930123](src/image-20231114155930123.png)
 
-图像经过卷积层后的输出尺寸公式为：$\text{output_size}=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
+图像经过卷积层后的输出尺寸公式为： $\text{Output Size}=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
 
 - n：输入图像的尺寸（边长，输入总是正方形）
 - k：卷积核的尺寸
 - p：padding 扩充的像素长度，=1 往外扩充 1 圈，=2 往外扩充 2 圈，以此类推
 - s：stride，即步长
 
-当考虑到 dilation 时，输出尺寸的计算公式变为：$\text{output_size}=\frac{n-d\times(k-1)+2p-1}{s}+1$，d 为 dilation 的值，当不等于 1 时，可采用这个公式。或者可以先换算 dilation 后的卷积核尺寸 $K=k+(k-1)\times (d-1)=d\times(k-1)+1$，然后 $\text{output_size}=\frac{n-K+2p}{s}+1$。
+当考虑到 dilation 时，输出尺寸的计算公式变为： $\text{Output Size}=\frac{n-d\times(k-1)+2p-1}{s}+1$，d 为 dilation 的值，当不等于 1 时，可采用这个公式。或者可以先换算 dilation 后的卷积核尺寸 $K=k+(k-1)\times (d-1)=d\times(k-1)+1$，然后 $\text{Output Size}=\frac{n-K+2p}{s}+1$。
 
-dilation 的官方解释为 Spacing between kernel elements （**卷积核的元素之间的距离**），这个距离是一个元素**往其相邻元素移动时，需要走的步数**，所以dilation=1 时，卷积核之间距离是1，无缝隙，dilation=2，卷积核之间距离是2，间隔一个元素。下图中是 dilation = 2 的情况：
+dilation 的官方解释为 Spacing between kernel elements （**卷积核的元素之间的距离**），这个距离是一个元素**往其相邻元素移动时，需要走的步数**，所以dilation=1 时，卷积核之间距离是1，无缝隙，dilation=2，卷积核之间距离是2，间隔一个元素。下图中是 dilation=2 的情况：
 
 ![dilation](src/dilation.gif)
 
 ### 4.1.2 快速判断输出尺寸
 
-先看一下公式：$\text{output_size}=\frac{n-d\times(k-1)+2p-1}{s}+1$。
+先看一下公式： $\text{Output Size}=\frac{n-d\times(k-1)+2p-1}{s}+1$。
 
 通常输入的图像都是正方形，且边长为 2 的次方，从公式可以看出，对输出尺寸影响最大的就是分母 s，通常 **s 等于几，输出尺寸就会变为原来的 1/s**，s 常取 1 或 2。
 
@@ -157,7 +157,7 @@ dilation 的官方解释为 Spacing between kernel elements （**卷积核的元
 
 ![img](src/1.png)
 
-数据经过池化层后，通道数不会改变，**尺寸**会发生改变，和卷积层的公式一样，输出尺寸公式为：$\text{output_size}=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
+数据经过池化层后，通道数不会改变，**尺寸**会发生改变，和卷积层的公式一样，输出尺寸公式为： $\text{Output Size}=\frac{n-k+2p}{s}+1$，如果计算结果不为整数则舍弃掉小数部分（即向下取整），参数说明如下：
 
 - n：输入图像的尺寸（边长，输入总是正方形）
 - k：池化核的尺寸
@@ -194,22 +194,18 @@ writer.add_graph(网络模型实例, 网络的输入)
 
 # 六、(P23) 损失函数与反向传播
 
-所有的常用 Loss：[loss-functions](https://pytorch.org/docs/stable/nn.html#loss-functions) 。
-
-[L1Loss](https://pytorch.org/docs/stable/generated/torch.nn.L1Loss.html#torch.nn.L1Loss) ：$l_n=|x_n-y_n|$，$L = (l_1 + l_2 +... + l_n) / n$ 或 $L = l_1 + l_2 +... + l_n$
-[MSELoss](https://pytorch.org/docs/stable/generated/torch.nn.MSELoss.html#torch.nn.MSELoss)：$l_n=(x_n-y_n)^2$，$L$ 的计算方式核 L1Loss 同理 (取平均或求和)
-
-[CrossEntropyLoss](https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html#torch.nn.CrossEntropyLoss)在**分类问题**中常用，计算公式比较复杂：
-
-$loss(x,class)=-log(\frac{exp(x[class])}{\sum_jexp(x[j])})=-x[class]+log(\sum_jexp(x[j]))$
+- 所有的常用 Loss：[loss-functions](https://pytorch.org/docs/stable/nn.html#loss-functions) 。
+- [L1Loss](https://pytorch.org/docs/stable/generated/torch.nn.L1Loss.html#torch.nn.L1Loss) ： $l_n=|x_n-y_n|$， $L = (l_1 + l_2 +... + l_n) / n$ 或 $L = l_1 + l_2 +... + l_n$
+- [MSELoss](https://pytorch.org/docs/stable/generated/torch.nn.MSELoss.html#torch.nn.MSELoss)： $l_n=(x_n-y_n)^2$， $L$ 的计算方式核 L1Loss 同理 (取平均或求和)
+- [CrossEntropyLoss](https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html#torch.nn.CrossEntropyLoss)在**分类问题**中常用，计算公式比较复杂： $loss(x,class)=-log(\frac{exp(x[class])}{\sum_jexp(x[j])})=-x[class]+log(\sum_jexp(x[j]))$
 
 以下面的的分类为例：
 
 ![img](src/5.png)
 
-其 $x(即output)=[0.1,0.2,0.4,0.3]$，$class(即Target) = 2 (表示Dog)$，所以：
+其 x(即output)=[0.1,0.2,0.4,0.3]，class(即Target) = 2 (表示Dog)，所以：
 
-$ loss(x,class)=-0.4+log(exp(0.1)+exp(0.2)+exp(0.4)+exp(0.3))$
+$loss(x,class)=-0.4+log(exp(0.1)+exp(0.2)+exp(0.4)+exp(0.3))$
 
 想要 loss 尽量小，那么就需要 $x[class]$ 尽量大（让 target 的概率尽量大），且 $\sum_jexp(x[j])$ 尽量小。
 
